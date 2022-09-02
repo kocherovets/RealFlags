@@ -13,19 +13,31 @@
 import Foundation
 
 extension Bundle {
-    
     private static let internalBundle = Bundle(for: FlagsBrowserController.self)
-    
+
     internal static var libraryBundle: Bundle {
         #if SWIFT_PACKAGE
-        Bundle.module
+            Bundle.module
         #else
-        [
-            Bundle(url: internalBundle.bundleURL.appendingPathComponent("RealFlags.bundle")),
-            internalBundle
-        ].lazy.compactMap({ $0 }).first ?? Bundle.main
+            let candidates = [
+                // Bundle should be present here when the package is linked into an App.
+                Bundle.main.resourceURL,
+
+                // Bundle should be present here when the package is linked into a framework.
+                internalBundle.resourceURL,
+
+                // For command-line tools.
+                Bundle.main.bundleURL,
+            ]
+
+            for candidate in candidates {
+                let bundlePath = candidate?.appendingPathComponent("RealFlags.bundle")
+                if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
+                    return bundle
+                }
+            }
+
+            return Bundle.main
         #endif
     }
-    
 }
-
