@@ -40,4 +40,8 @@ extension Bundle {
             return Bundle.main
         #endif
     }
+    
+    internal static var imageBundle: Bundle {
+        Bundle(identifier: "ABG.Media") ?? Bundle.main
+    }
 }
