@@ -208,7 +208,7 @@ public class FlagsBrowserController: UIViewController {
             }
         }
         
-        return [infoSection, dataSection]
+        return [dataSection, infoSection]
     }
     
     private func reloadDataForLoaders(_ loaders: [AnyFlagsLoader]) -> [FlagBrowserItem] {
